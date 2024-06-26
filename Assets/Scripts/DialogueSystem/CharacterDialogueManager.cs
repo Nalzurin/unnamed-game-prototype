@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class CharacterDialogueManager : MonoBehaviour
 {
+    public delegate void OnBeginDialogue();
+    public static event OnBeginDialogue onBeginDialogue;
+    public UIManager uiManager;
     public TextAsset DialogueJSON;
     public string Id;
     public string Name;
@@ -13,7 +17,6 @@ public class CharacterDialogueManager : MonoBehaviour
         (string _Id, string _Name, Dictionary<string, string> _dialogues) = DialogueParser.ParseDialogue(DialogueJSON);
         Id = _Id; Name = _Name; Dialogues = _dialogues;
     }
-
     public string GetDialogue(string id)
     {
         if (id == null) return null;
@@ -27,6 +30,18 @@ public class CharacterDialogueManager : MonoBehaviour
             return null;
         }
        
+    }
+    public void ShowName()
+    {
+        uiManager.DisplayHoverText(Name);
+    }
+    public void HideName()
+    {
+        uiManager.HideCharacterName();
+    }
+    public void BeginDialogue()
+    {
+        onBeginDialogue?.Invoke();
     }
 
 
